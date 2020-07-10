@@ -1,3 +1,10 @@
-
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+body{
+
+}
+
+a.btn {
+	font-size: 200px;
+}
