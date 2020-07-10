@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>@yield('title','Weibo App')</title>
-	<link rel="stylesheet" type="text/css" href="/css/app.css">
+	<link rel="stylesheet" type="text/css" href="{{  mix('css/app.css') }}">
 	@yield('link')
 </head>
 <body>
