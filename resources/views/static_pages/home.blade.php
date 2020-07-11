@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('link')
-	<link rel="stylesheet" type="text/css" href="{{  mix('css/home.css') }}">
+	
 @stop
 
 @section('content')
