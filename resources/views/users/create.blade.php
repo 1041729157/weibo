@@ -9,11 +9,16 @@
 				<h5>注册</h5>
 			</div>
 			<div class="card-body">
+
+				@include('shared._errors')
+				
 				<!-- form表单 -->
 				<form method="POST" action="{{ route('users.store') }}">
 
+					<!-- 提供一个 token（令牌）来防止应用受到 CSRF（跨站请求伪造）的攻击 -->
 					{{ csrf_field() }}
 					<!-- 等同于<input type="hidden" name="_token" value="fhcxqT67dNowMoWsAHGGPJOAWJn8x5R5ctSwZrAq"> -->
+
 
 					<div class="form-group">
 						<label for="name">名称：</label>
