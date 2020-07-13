@@ -20,4 +20,15 @@ class UsersController extends Controller
     	//compact — 建立一个数组，包括变量名和它们的值
     	return view('users.show', compact('user'));
     }
+
+    public function store(Request $request){
+    	//validate 方法接收两个参数，第一个参数为用户的输入数据，第二个参数为该输入数据的验证规则
+    	$this->validate($request, [
+    		//required 验证用户名是否为空；unique:users 数据唯一性验证； email 能够完成邮箱格式的验证；confirmed 来进行密码匹配验证，保证两次输入的密码一致
+    		'name' => 'required|unique:users|max:50',
+    		'email' => 'required|email|unique:users|max:255',
+    		'password' => 'required|confirmed|min:6'
+    	]);
+    	return;
+    }
 }
