@@ -21,6 +21,7 @@ class UsersController extends Controller
     	return view('users.show', compact('user'));
     }
 
+    // Request 实例可以获取用户在表单中输入的值
     public function store(Request $request){
     	//validate 方法接收两个参数，第一个参数为用户的输入数据，第二个参数为该输入数据的验证规则
     	$this->validate($request, [
@@ -29,6 +30,18 @@ class UsersController extends Controller
     		'email' => 'required|email|unique:users|max:255',
     		'password' => 'required|confirmed|min:6'
     	]);
-    	return;
+
+    	$user = User::create([
+    		'name' => $request->name,
+    		'email' => $request->email,
+    		'password' => bcrypt($request->password),
+    	]);
+
+    	// 使用 session() 方法来访问会话实例。而当我们想存入一条缓存的数据，让它只在下一次的请求内有效时
+    	//flash 方法接收两个参数，第一个为会话的键，第二个为会话的值
+    	session()->flash('success', '欢迎');
+
+    	//redirect()重定向操作；[$user] == [$user->id]
+    	return redirect()->route('users.show', [$user]);
     }
 }
