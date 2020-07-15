@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use Auth;
 
 
 class UsersController extends Controller
@@ -38,9 +39,12 @@ class UsersController extends Controller
     		'password' => bcrypt($request->password),
     	]);
 
+    	//注册成功后自动登陆
+    	Auth::login($user);
+
     	// 使用 session() 方法来访问会话实例。而当我们想存入一条缓存的数据，让它只在下一次的请求内有效时
     	//flash 方法接收两个参数，第一个为会话的键，第二个为会话的值
-    	session()->flash('success', '欢迎');
+    	session()->flash('success', '欢迎--'.$user->name);
 
     	//redirect()重定向操作；[$user] == [$user->id]
     	return redirect()->route('users.show', [$user]);
