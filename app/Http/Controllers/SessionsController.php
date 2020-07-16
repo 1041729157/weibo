@@ -39,4 +39,10 @@ class SessionsController extends Controller
 			3). 如果匹配后两个值不一致，则返回 false；
 		3.如果用户未找到，则返回 false。*/
     }
+
+    public function destroy(){
+        Auth::logout();
+        session()->flash('success', '退出登陆成功！');
+        return redirect()->route('login');
+    }
 }
