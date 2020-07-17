@@ -21,6 +21,7 @@ class UsersController extends Controller
     public function show(User $user){
     	//compact — 建立一个数组，包括变量名和它们的值
     	return view('users.show', compact('user'));
+        //等同于 return view('users.show', ['user' => $user]);
     }
 
     // Request 实例可以获取用户在表单中输入的值
@@ -47,6 +48,34 @@ class UsersController extends Controller
     	session()->flash('success', '欢迎--'.$user->name);
 
     	//redirect()重定向操作；[$user] == [$user->id]
-    	return redirect()->route('users.show', [$user]);
+    	return redirect()->route('users.show', Auth::user()->id);
+    }
+
+
+    public function edit(User $user){
+        return view('users.edit', compact('user'));
+    }
+
+    public function update(User $user, Request $request){
+        $this->validate($request, [
+            'name' => 'required|max:50',
+            'password' => 'nullable|confirmed|min:6|max:16'
+        ]);
+
+        /*$user->update([
+            'name' => $request->name,
+            'password' => bcrypt($request->password)
+        ]);*/
+        $date = [];
+        $date['name'] = $request->name;
+        if($request->password){
+            $date['password'] = bcrypt($request->password);
+        }
+
+        $user->update($date);
+
+        session()->flash('success','个人资料更新成功！');
+
+        return redirect()->route('users.show', $user->id);
     }
 }

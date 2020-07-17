@@ -17,13 +17,15 @@ Route::get('/users/{user}','UsersController@show')->name('users.show');
 //创建用户：
 Route::post('/users','UsersController@store')->name('users.store');
 //编辑个人信息页：
-Route::get('/users/{user}/edit','UsersController@edit')->name('usesr.edit');
+Route::get('/users/{user}/edit','UsersController@edit')->name('users.edit');
 //更新用户：
 Route::patch('/users/{user}','UsersController@update')->name('users.update');
 //删除用户：
 Route::delete('/users/{user}','UsersController@destroy')->name('users.destroy');
 
-
+//登录页
 Route::get('/login', 'SessionsController@create')->name('login');
+//登陆
 Route::post('/login','SessionsController@store')->name('login');
+//注销
 Route::delete('/logout', 'SessionsController@destroy')->name('logout');
