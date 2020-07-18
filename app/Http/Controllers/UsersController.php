@@ -9,6 +9,19 @@ use Auth;
 
 class UsersController extends Controller
 {
+
+    public function __construct(){
+        //middleware 方法，该方法接收两个参数，第一个为中间件的名称，第二个为要进行过滤的动作
+        $this->middleware('auth',[
+            //except 方法来设定 指定动作 不使用 Auth 中间件进行过滤
+            'except' => ['show', 'create', 'store']
+        ]);
+
+        $this->middleware('guest', [
+            'only' => ['create']
+        ]);
+    }
+
 	public function index(){
 		return view('users.index');
 	}
@@ -53,10 +66,14 @@ class UsersController extends Controller
 
 
     public function edit(User $user){
+        //默认的 App\Http\Controllers\Controller 类包含了 Laravel 的 AuthorizesRequests trait。此 trait 提供了 authorize 方法
+        //authorize 方法接收两个参数，第一个为授权策略的名称，第二个为进行授权验证的数据
+        $this->authorize('update',$user);//'update'是UserPolicy.php授权策略中的update方法
         return view('users.edit', compact('user'));
     }
 
     public function update(User $user, Request $request){
+        $this->authorize('update', $user);
         $this->validate($request, [
             'name' => 'required|max:50',
             'password' => 'nullable|confirmed|min:6|max:16'
