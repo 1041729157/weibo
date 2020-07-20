@@ -13,17 +13,23 @@ class UsersController extends Controller
     public function __construct(){
         //middleware 方法，该方法接收两个参数，第一个为中间件的名称，第二个为要进行过滤的动作
         $this->middleware('auth',[
-            //except 方法来设定 指定动作 不使用 Auth 中间件进行过滤
-            'except' => ['show', 'create', 'store']
+            //except 方法来设定 指定动作 不使用 Auth 中间件进行过滤(游客除以下页面之外均无法访问访问)
+            'except' => ['show', 'create', 'store', 'index']
         ]);
 
+        //仅限游客访问
         $this->middleware('guest', [
             'only' => ['create']
         ]);
+
     }
 
-	public function index(){
-		return view('users.index');
+	public function index(User $user){
+        // $users = User::all();
+        // $users = $user->all();
+        // $users = User::paginate(10);
+        $users = $user->paginate(10);
+		return view('users.index', compact('users'));
 	}
 
     public function create(){
