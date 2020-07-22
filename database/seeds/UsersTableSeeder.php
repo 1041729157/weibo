@@ -13,7 +13,7 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
     	//User::class 指定模型类
-        $users = factory(User::class)->times(50)->make();
+        $users = factory(User::class)->times(500)->make();
 
         //makeVisible 方法临时显示 User 模型里指定的隐藏属性 $hidden
         //insert 方法来将生成假用户列表数据批量插入到数据库中
@@ -23,6 +23,7 @@ class UsersTableSeeder extends Seeder
         $user->name = 'HH';
         $user->email = '1041729157@qq.com';
         $user->password = bcrypt('123456');
+        $user->is_admin = true;//不能加引号
         $user->save();
     }
 }

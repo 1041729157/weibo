@@ -5,6 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="{{  mix('css/app.css') }}">
 	<link rel="stylesheet" type="text/css" href="/css/home.css">
 	@yield('link')
+
 </head>
 <body>
 	@include('layouts._header')
