@@ -31,11 +31,17 @@ class SessionsController extends Controller
     	//-->if (Auth::attempt(['email' => $email, 'password' => $password]))
     	// if (Auth::attempt($credentials, $request->has('remember'))) {
         if (Auth::attempt($credentials, 'true')) {
-    		session()->flash('success','欢迎回来--'.Auth::user()->name);
-            $fallback = route('users.show', Auth::user());
-    		// return redirect()->route('users.show',[Auth::user()]);
-            //redirect() 实例提供了一个 intended 方法，该方法可将页面重定向到上一次请求尝试访问的页面上，并接收一个默认跳转地址参数，当上一次请求记录为空时，跳转到默认地址上
-            return redirect()->intended($fallback);
+            if (Auth::user()->activated) {
+                session()->flash('success','欢迎回来--'.Auth::user()->name);
+                $fallback = route('users.show', Auth::user());
+                // return redirect()->route('users.show',[Auth::user()]);
+                //redirect() 实例提供了一个 intended 方法，该方法可将页面重定向到上一次请求尝试访问的页面上，并接收一个默认跳转地址参数，当上一次请求记录为空时，跳转到默认地址上
+                return redirect()->intended($fallback);
+            }else{
+                Auth::logout();
+                session()->flash('danger', '您的账号未激活，请检查邮箱中的邮件进行激活！');
+                return redirect()->route('login');
+            }
     	}else{
     		session()->flash('danger','您的邮箱和密码不匹配');
     		//使用 withInput() 后模板里 old('email') 将能获取到上一次用户提交的内容

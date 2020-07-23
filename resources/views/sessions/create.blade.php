@@ -32,7 +32,7 @@
 				<button type="submit" class="btn btn-primary">登陆</button>
 			</form>
 			<hr>
-			<p><a href="{{ route('signup') }}">新用户注册</a></p>
+			<p><a href="{{ route('users.create') }}">新用户注册</a></p>
 		</div>
 	</div>
 </div>

@@ -25,9 +25,9 @@ class RedirectIfAuthenticated
             // $fallback = route('home');
             // return redirect()->intended($fallback);
 
-            return redirect()->back();
+            // return redirect()->back();
 
-            // return redirect('/');
+            return redirect('/');
         }
         //return $next($request);时，相当与把请求传入接下来的逻辑中。同时，中间件也可以返回重定向，不运行之前的逻辑
         return $next($request);

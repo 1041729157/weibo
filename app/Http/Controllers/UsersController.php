@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use Auth;
+use Mail;
 
 
 class UsersController extends Controller
@@ -14,7 +15,7 @@ class UsersController extends Controller
         //middleware 方法，该方法接收两个参数，第一个为中间件的名称，第二个为要进行过滤的动作
         $this->middleware('auth',[
             //except 方法来设定 指定动作 不使用 Auth 中间件进行过滤(游客除以下页面之外均无法访问访问)
-            'except' => ['show', 'create', 'store', 'index']
+            'except' => ['show', 'create', 'store', 'index', 'confirmEmail']
         ]);
 
         //仅限游客访问
@@ -60,15 +61,21 @@ class UsersController extends Controller
     		'password' => bcrypt($request->password),
     	]);
 
+        //注册时给用户发送一个激活邮件
+        $this->sendEmaiConfirmationTo($user);
+        session()->flash('success', "验证邮件已经发送到你的注册邮箱上，请注意查收！");
+
+        return redirect()->route('users.create');
+
     	//注册成功后自动登陆
-    	Auth::login($user);
+    	// Auth::login($user);
 
     	// 使用 session() 方法来访问会话实例。而当我们想存入一条缓存的数据，让它只在下一次的请求内有效时
     	//flash 方法接收两个参数，第一个为会话的键，第二个为会话的值
-    	session()->flash('success', '欢迎--'.$user->name);
+    	// session()->flash('success', '欢迎--'.$user->name);
 
     	//redirect()重定向操作；[$user] == [$user->id]
-    	return redirect()->route('users.show', Auth::user()->id);
+    	// return redirect()->route('users.show', Auth::user()->id);
     }
 
 
@@ -108,5 +115,36 @@ class UsersController extends Controller
         $user->delete();
         session()->flash('success', '用户删除成功！');
         return back();
+    }
+
+    protected function sendEmaiConfirmationTo($user){
+        $view = 'emails.confirm';
+        $data = compact('user');
+        $from = '1041729157@qq.com';
+        $name = 'HH';
+        $to = $user->email;
+        $subject = "感谢注册，请确认您的邮箱！";
+
+        /*Mail 的 send 方法接收三个参数：
+        第一个参数是包含邮件消息的视图名称
+        第二个参数是要传递给该视图的数据数组
+        最后是一个用来接收邮件消息实例的闭包回调，我们可以在该回调中自定义邮件消息的发送者、接收者、邮件主题等信息*/
+        Mail::send($view, $data, function ($message) use ($from, $name, $to, $subject) {
+            $message->from($from, $name)->to($to)->subject($subject);
+        });
+    }
+
+    public function confirmEmail($token){
+
+        $user = User::where('activation_token', $token)->firstOrfail();
+
+        $user->activated = true;
+        $user->activation_token = null;
+        $user->save();
+
+        Auth::login($user);
+        session()->flash('success', '恭喜激活成功!');
+        $fallback = route('users.show', Auth::user()->id);
+        return redirect()->intended($fallback);
     }
 }

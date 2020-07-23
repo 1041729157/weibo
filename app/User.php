@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -35,5 +36,17 @@ class User extends Authenticatable
         //用 strtolower 方法将邮箱转换为小写
         $hash = md5(strtolower(trim($this->attributes['email'])));
         return "http://www.gravatar.com/avatar/$hash?s=$size";
+    }
+
+    public static function boot(){
+
+        //先执行父类的代码，后面执行自己重写的代码
+        //parent::调用父类方法; 
+        parent::boot();
+
+        //监听，创建activation_token
+        static::creating(function($user){
+            $user->activation_token = Str::random(10);
+        });
     }
 }
