@@ -18,7 +18,7 @@
 					<input class="form-control" type="text" name="email" value="{{ old('email') }}">
 				</div>
 				<div class="form-group">
-					<label for="password">密码</label>
+					<label for="password">密码（<a href="{{ route('password.request') }}">忘记密码？</a>）</label>
 					<input class="form-control" type="password" name="password" value="{{ old('password') }}">
 				</div>
 

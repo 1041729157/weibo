@@ -120,8 +120,8 @@ class UsersController extends Controller
     protected function sendEmaiConfirmationTo($user){
         $view = 'emails.confirm';
         $data = compact('user');
-        $from = '1041729157@qq.com';
-        $name = 'HH';
+        // $from = '1041729157@qq.com';
+        // $name = 'HH';
         $to = $user->email;
         $subject = "感谢注册，请确认您的邮箱！";
 
@@ -129,13 +129,17 @@ class UsersController extends Controller
         第一个参数是包含邮件消息的视图名称
         第二个参数是要传递给该视图的数据数组
         最后是一个用来接收邮件消息实例的闭包回调，我们可以在该回调中自定义邮件消息的发送者、接收者、邮件主题等信息*/
-        Mail::send($view, $data, function ($message) use ($from, $name, $to, $subject) {
+        /*Mail::send($view, $data, function ($message) use ($from, $name, $to, $subject) {
             $message->from($from, $name)->to($to)->subject($subject);
+        });*/
+        Mail::send($view, $data, function ($message) use ($to, $subject) {
+            $message->to($to)->subject($subject);
         });
     }
 
     public function confirmEmail($token){
 
+        //where 方法接收两个参数，第一个参数为要进行查找的字段名称，第二个参数为对应的值，查询结果返回的是一个数组，使用 firstOrFail 方法来取出第一个用户，在查询不到指定用户时将返回一个 404 响应
         $user = User::where('activation_token', $token)->firstOrfail();
 
         $user->activated = true;

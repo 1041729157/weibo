@@ -82,3 +82,12 @@ section .h1 {
     display: block;
 	margin: 0 auto;
 }
+
+
+/* messages */
+
+.alert-status{
+	background-color: #dff0d8;
+  	border-color: #d6e9c6;
+  	color: #3c763d;
+}
