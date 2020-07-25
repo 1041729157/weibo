@@ -40,8 +40,12 @@ class UsersController extends Controller
 
     //show() 方法传参时声明了类型 —— Eloquent 模型 User，对应的变量名 $user 会匹配路由片段中的 {user}，这样，Laravel 会自动注入与请求 URI 中传入的 ID 对应的用户模型实例
     public function show(User $user){
-    	//compact — 建立一个数组，包括变量名和它们的值
-    	return view('users.show', compact('user'));
+        $statuses = $user->statuses()
+                         //指定字段名和排序方式来对微博进行排序
+                         ->orderBy('created_at', 'desc')
+                         ->paginate(10);
+    	//compact — 建立一个数组，包括变量名和它们的值,compact 方法可以同时接收多个参数
+    	return view('users.show', compact('user', 'statuses'));
         //等同于 return view('users.show', ['user' => $user]);
     }
 
