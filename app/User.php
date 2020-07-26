@@ -88,8 +88,8 @@ class User extends Authenticatable
     }
 
     public function isFollowing($user_id){
-        //$user->followings 同等于 $user->followings()->get() 返回的是一个 Collection 类的实例，contains 方法是 Collection 类的一个方法
-        //$user->followings() 返回的是关联对象
+        //$user->followings 同等于 $user->followings()->get() 返回的是一个 Collection 类的实例，也就是一个集合，contains 方法是 Collection 类的一个方法
+        //$user->followings() 返回的是一个 HasMany 对象
         return $this->followings->contains($user_id);
     }
 
