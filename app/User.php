@@ -60,4 +60,38 @@ class User extends Authenticatable
     }
 
 
+    //user_id 和 follower_id 都是 user 的主键 ID，只是在逻辑上，user_id 表示被关注人，follower_id 表示被关注人的粉丝，followers 表作为中间表存储了这个关系，它的两个关联表恰好是同一个表，即 user 表
+    public function followers(){
+        return $this->belongsTomany(User::class, 'followers', 'user_id', 'follower_id');
+    }
+
+    public function followings(){
+        //第二个参数自定义关联关系表名称，第三个参数是定义在关联中的模型外键名，而第四个参数则是要合并的模型外键名
+        return $this->belongsTomany(User::class, 'followers', 'follower_id', 'user_id');
+    }
+
+    //关注
+    public function follow($user_ids){
+        if ( ! is_array($user_ids)){
+            $user_ids = compact('user_ids');
+        }
+        //$user->followings()获取用户关注人列表
+        $this->followings()->sync($user_ids, false);
+    }
+
+    //取消关注
+    public function unfollow($user_ids){
+        if ( ! is_array($user_ids)){
+            $user_ids = compact('user_ids');
+        }
+        $this->followings()->detach($user_ids);
+    }
+
+    public function isFollowing($user_id){
+        //$user->followings 同等于 $user->followings()->get() 返回的是一个 Collection 类的实例，contains 方法是 Collection 类的一个方法
+        //$user->followings() 返回的是关联对象
+        return $this->followings->contains($user_id);
+    }
+
+
 }
