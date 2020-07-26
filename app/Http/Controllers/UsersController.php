@@ -22,7 +22,6 @@ class UsersController extends Controller
         $this->middleware('guest', [
             'only' => ['create']
         ]);
-
     }
 
 	public function index(User $user){
@@ -154,5 +153,18 @@ class UsersController extends Controller
         session()->flash('success', '恭喜激活成功!');
         $fallback = route('users.show', Auth::user()->id);
         return redirect()->intended($fallback);
+    }
+
+
+    public function followings(User $user){
+        $users = $user->followings()->paginate(30);
+        $title = $user->name."的关注列表";
+        return view('users.show_follow', compact('users', 'title'));
+    }
+
+    public function followers(User $user){
+        $users = $user->followers()->paginate(30);
+        $title = $user->name."的粉丝列表";
+        return view('users.show_follow', compact('users', 'title'));
     }
 }
